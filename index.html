@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>البوستات</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding-top: 160px;
+      background-color: #f9f9f9;
+    }
+
+    .sticky-header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #3498db;
+      color: white;
+      padding: 20px;
+      font-size: 24px;
+      text-align: center;
+      z-index: 1000;
+    }
+
+    .search-box {
+      position: fixed;
+      top: 70px;
+      width: 100%;
+      padding: 10px;
+      background: white;
+      z-index: 999;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .search-box input,
+    .search-box select {
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    .search-box input {
+      width: 35%;
+    }
+
+    .search-box select {
+      width: 30%;
+    }
+
+    .search-box button {
+      padding: 8px 16px;
+      font-size: 16px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .back-button {
+      padding: 6px 16px;
+      font-size: 15px;
+      background-color: transparent;
+      color: #3498db;
+      border: 2px solid #3498db;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .card {
+      background-color: white;
+      margin: 20px;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .post-number {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 10px;
+    }
+
+    .post-text {
+      font-size: 18px;
+      margin-bottom: 10px;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+
+    .post-media {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .post-media img,
+    .post-media video {
+      width: 220px;
+      height: auto;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .share-button {
+      margin-top: 10px;
+      padding: 6px 12px;
+      font-size: 14px;
+      background-color: transparent;
+      color: #2ecc71;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.9);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .modal-content {
+      max-width: 95vw;
+      max-height: 90vh;
+      width: auto;
+      height: auto;
+    }
+
+    .close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 30px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 40px;
+      color: white;
+      cursor: pointer;
+      padding: 0 20px;
+      user-select: none;
+    }
+
+    .arrow.left { left: 10px; }
+    .arrow.right { right: 10px; }
+
+    .searching-text {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 16px;
+      color: #555;
+    }
+
+    .results-count {
+      text-align: center;
+      margin-top: 5px;
+      font-size: 15px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="sticky-header">✨ أهلاً بيك في الطعوم للاضافه الاعلانات برجاء التواصل علي 012121212121212</div>
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="🔍 ابحث هنا...">
+    <select id="governorateSelect">
+  <option value="">-- اختر المحافظة --</option>
+  <option>القاهرة</option>
+  <option>الجيزة</option>
+  <option>الإسكندرية</option>
+  <option>الدقهلية</option>
+  <option>البحر الأحمر</option>
+  <option>البحيرة</option>
+  <option>الفيوم</option>
+  <option>الغربية</option>
+  <option>الإسماعيلية</option>
+  <option>المنوفية</option>
+  <option>المنيا</option>
+  <option>القليوبية</option>
+  <option>الوادي الجديد</option>
+  <option>السويس</option>
+  <option>أسوان</option>
+  <option>أسيوط</option>
+  <option>بني سويف</option>
+  <option>بورسعيد</option>
+  <option>دمياط</option>
+  <option>الشرقية</option>
+  <option>جنوب سيناء</option>
+  <option>كفر الشيخ</option>
+  <option>مطروح</option>
+  <option>الأقصر</option>
+  <option>قنا</option>
+  <option>شمال سيناء</option>
+  <option>سوهاج</option>
+</select>
+    <button id="searchButton">ابحث</button>
+    <button id="backButton" style="display:none;">🔙 رجوع لباقي جميع الإعلانات</button>
+  </div>
+  <div class="searching-text" id="searchingText"></div>
+  <div class="results-count" id="resultsCount"></div>
+  <div id="posts-container"></div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+  <!-- Modal Viewer Elements -->
+  <div id="mediaModal" class="modal" onclick="closeModal()">
+    <span class="close" onclick="closeModal()">×</span>
+    <span id="prevArrow" class="arrow left" onclick="event.stopPropagation(); prevMedia()">❮</span>
+    <div id="modalContentContainer"></div>
+    <span id="nextArrow" class="arrow right" onclick="event.stopPropagation(); nextMedia()">❯</span>
+  </div>
+
+  <script>
+  const firebaseConfigs = [
+ {
+    apiKey: "AIzaSyAvsYJMDdygTeGnxwZLSoiyMFJrGcfxyuU",
+    authDomain: "t3oomseed1.firebaseapp.com",
+    projectId: "t3oomseed1",
+    storageBucket: "t3oomseed1.firebasestorage.app",
+    messagingSenderId: "82046642029",
+    appId: "1:82046642029:web:2db2f1a8723662c9065c64",
+    measurementId: "G-201MZ6WK54"
+  }
+];
+    const allDatabases = firebaseConfigs.map((config, index) => {
+      const app = firebase.initializeApp(config, "app" + index);
+      return firebase.app("app" + index).database();
+    });
+
+    let allPosts = [];
+    let loadedData = [];
+
+    function loadAllPosts() {
+      loadedData = Array(allDatabases.length).fill([]);
+      allDatabases.forEach((db, index) => {
+        try {
+          db.ref("posts").on("value", snapshot => {
+            const data = snapshot.val();
+            loadedData[index] = data ? Object.entries(data).map(([key, val]) => ({ key, ...val })) : [];
+            mergeAndRender();
+          });
+        } catch (e) {
+          console.warn(`⚠️ Firebase project ${index + 1} خطأ:`, e.message);
+          loadedData[index] = [];
+          mergeAndRender();
+        }
+      });
+    }
+
+  function mergeAndRender() {
+  // دمج جميع البيانات من كل قواعد البيانات وترتيبهم حسب key تنازليًا
+  const flatPosts = loadedData.flat().sort((a, b) => b.key.localeCompare(a.key));
+
+  // إضافة رقم عرض متسلسل لكل بوست
+  allPosts = flatPosts.map((post, index) => ({
+    ...post,
+    displayNumber: index + 1
+  }));
+
+  // عرض البوستات
+  renderPosts(allPosts);
+}
+
+
+    function normalize(text) {
+      return (text || "")
+        .replace(/[أإآا]/g, "ا")
+        .replace(/[ةه]/g, "ه")
+        .replace(/[ىي]/g, "ي")
+        .replace(/ء/g, "")
+        .replace(/ئ/g, "ي")
+        .replace(/ؤ/g, "و")
+        .toLowerCase();
+    }
+
+    const searchInput = document.getElementById("searchInput");
+    const searchSelect = document.getElementById("governorateSelect");
+    const searchButton = document.getElementById("searchButton");
+    const searchingText = document.getElementById("searchingText");
+    const resultsCount = document.getElementById("resultsCount");
+    const backButton = document.getElementById("backButton");
+    const container = document.getElementById("posts-container");
+
+    searchButton.addEventListener("click", () => {
+      const textTerm = normalize(searchInput.value.trim());
+      const govTerm = normalize(searchSelect.value.trim());
+
+      const filtered = allPosts.filter(post => {
+        const text = normalize(post.text || "");
+        const gov = normalize(post.gov || "");
+       return (
+  (textTerm && normalize(text).includes(textTerm)) ||
+  (govTerm && normalize(gov).includes(govTerm))
+);
+
+      });
+
+      if (textTerm || govTerm) {
+        searchingText.textContent = `بيتم الآن البحث عن: \"${searchInput.value || searchSelect.value}\"...`;
+        backButton.style.display = "inline-block";
+      } else {
+        searchingText.textContent = "";
+        backButton.style.display = "none";
+      }
+
+      resultsCount.textContent = `عدد النتائج: ${filtered.length}`;
+      renderPosts(filtered);
+
+      if (filtered.length > 0) {
+        setTimeout(() => {
+          document.querySelector(".card")?.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      }
+    });
+
+    backButton.addEventListener("click", () => {
+      searchInput.value = "";
+      searchSelect.value = "";
+      searchingText.textContent = "";
+      resultsCount.textContent = "";
+      backButton.style.display = "none";
+      renderPosts(allPosts);
+    });
+
+    function renderPosts(posts) {
+      container.innerHTML = "";
+      posts.forEach(post => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const number = document.createElement("div");
+        number.className = "post-number";
+     number.textContent = `بوست رقم ${post.displayNumber}`;
+        card.appendChild(number);
+
+        const text = document.createElement("div");
+        text.className = "post-text";
+        text.textContent = post.text || "";
+        card.appendChild(text);
+
+        const mediaContainer = document.createElement("div");
+        mediaContainer.className = "post-media";
+
+        const mediaItems = [];
+        for (let k in post) {
+          if (k.startsWith("image") || k.startsWith("video")) {
+            mediaItems.push({ type: k.startsWith("image") ? "img" : "video", src: post[k] });
+          }
+        }
+
+        mediaItems.forEach((item, i) => {
+          const el = document.createElement(item.type);
+          el.src = item.src;
+          if (item.type === "video") el.controls = true;
+          el.onclick = () => openModal(mediaItems, i);
+          mediaContainer.appendChild(el);
+        });
+
+        card.appendChild(mediaContainer);
+
+        const shareBtn = document.createElement("button");
+        shareBtn.className = "share-button";
+        shareBtn.textContent = "🔗 مشاركة";
+        shareBtn.onclick = () => {
+          const url = window.location.href;
+          const shareText = `${post.text || ""}\n${url}`;
+          if (navigator.share) {
+            navigator.share({ title: "مشاركة بوست", text: shareText, url: url });
+          } else {
+            const wa = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+            const fb = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+            window.open(wa, "_blank");
+            window.open(fb, "_blank");
+          }
+        };
+        card.appendChild(shareBtn);
+
+        container.appendChild(card);
+      });
+    }
+
+    let currentMedia = [], currentIndex = 0;
+    let clickedVideoTime = 0;
+    const modal = document.getElementById("mediaModal");
+    const modalContainer = document.getElementById("modalContentContainer");
+    const prevArrow = document.getElementById("prevArrow");
+    const nextArrow = document.getElementById("nextArrow");
+    let touchStartX = 0, touchEndX = 0;
+
+    function openModal(media, index) {
+      currentMedia = media;
+      currentIndex = index;
+
+      document.querySelectorAll("video").forEach(v => {
+        if (!v.paused) {
+          clickedVideoTime = v.currentTime;
+          v.pause();
+        }
+      });
+
+      updateModal();
+      modal.style.display = "flex";
+    }
+
+    function updateModal() {
+      modalContainer.innerHTML = "";
+      const item = currentMedia[currentIndex];
+      const el = document.createElement(item.type);
+      el.src = item.src;
+      el.className = "modal-content";
+
+      if (item.type === "video") {
+        el.controls = true;
+        el.autoplay = true;
+        el.addEventListener("loadedmetadata", () => {
+          el.currentTime = clickedVideoTime;
+        });
+      }
+
+      el.addEventListener("touchstart", e => {
+        touchStartX = e.changedTouches[0].screenX;
+      }, false);
+      el.addEventListener("touchend", e => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipeGesture();
+      }, false);
+
+      modalContainer.appendChild(el);
+      prevArrow.style.display = currentMedia.length > 1 ? "block" : "none";
+      nextArrow.style.display = currentMedia.length > 1 ? "block" : "none";
+    }
+
+    function closeModal() {
+      modal.style.display = "none";
+      modalContainer.innerHTML = "";
+      clickedVideoTime = 0;
+    }
+
+    function prevMedia() {
+      currentIndex = (currentIndex - 1 + currentMedia.length) % currentMedia.length;
+      clickedVideoTime = 0;
+      updateModal();
+    }
+
+    function nextMedia() {
+      currentIndex = (currentIndex + 1) % currentMedia.length;
+      clickedVideoTime = 0;
+      updateModal();
+    }
+
+    function handleSwipeGesture() {
+      const threshold = 50;
+      if (touchEndX < touchStartX - threshold) nextMedia();
+      if (touchEndX > touchStartX + threshold) prevMedia();
+    }
+
+    loadAllPosts();
+  </script>
+</body>
+</html>
